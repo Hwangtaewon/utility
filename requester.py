@@ -1,6 +1,7 @@
 import requests
 import time
 import random
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 def requester(url, data=None, GET=True):
     time.sleep(1) #temparary delay
