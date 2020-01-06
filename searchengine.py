@@ -68,7 +68,6 @@ class SearchEengine(object):
                 self.update_page_no()
             
             query = self.generate_query()
-            print(query)
             res = self.search(query)
             
             if not self.check_response_errors(res):
