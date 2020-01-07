@@ -29,7 +29,7 @@ class Whois(object):
             f.close()
 
         except Exception as e:
-            print("[!] Error: Fail to load json file. " + e)
+            print(e)
             exit(-1)
         
         for owner, list_regex in data.items():
@@ -42,10 +42,27 @@ class Whois(object):
     def query_db(self, url):
 
         for owner, list_regex in self.subdomains.items():
-            for regex in list_regex:
-                if regex.findall(url) != []:
-                    return owner
+            if self.list_regex_find(url, list_regex):
+                return owner
+
         return ""
+    
+    def query_db_with_ownerlist(self, url, owner_list):
+
+        for owner in owner_list:
+            if owner not in self.subdomains:
+                continue
+
+            if self.list_regex_find(url, self.subdomains[owner]):
+                return owner
+
+        return ""
+
+    def list_regex_find(self, url, list_regex):
+        for regex in list_regex:
+            if regex.findall(url) != []:
+                return True
+        return False
 
     # use whois service
     def query_whois(self, url):

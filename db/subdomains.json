@@ -1,11 +1,90 @@
 {
+    "Akamai":[
+        "[a-z0-9\\.\\-]{0,63}\\.akamai\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaiedge\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaized\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaihd\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.edgesuite\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.edgekey\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaitechnologies\\.com$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaitechnologies\\.fr$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaitech\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akadns\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akam\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamaistream\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.akamai\\.com$"
+    ],
     "AWS_S3":[
         "^[a-z0-9\\.\\-]{0,63}\\.?s3.amazonaws\\.com$",
-        "^[a-z0-9\\.\\-]{0,63}\\.?s3-website[\\.-](eu|ap|us|ca|sa|cn)-\\w{2,14}-\\d{1,2}\\.amazonaws.com(\\.cn)?$",
-        "^[a-z0-9\\.\\-]{0,63}\\.?s3[\\.-](eu|ap|us|ca|sa)-\\w{2,14}-\\d{1,2}\\.amazonaws.com$",
-        "^[a-z0-9\\.\\-]{0,63}\\.?s3.dualstack\\.(eu|ap|us|ca|sa)-\\w{2,14}-\\d{1,2}\\.amazonaws.com$"  
+        "^[a-z0-9\\.\\-]{0,63}\\.?s3-website[\\.-](eu|ap|us|ca|sa|cn)-\\w{2,14}-\\d{1,2}\\.amazonaws\\.com(\\.cn)?$",
+        "^[a-z0-9\\.\\-]{0,63}\\.?s3[\\.-](eu|ap|us|ca|sa)-\\w{2,14}-\\d{1,2}\\.amazonaws\\.com$",
+        "^[a-z0-9\\.\\-]{0,63}\\.?s3.dualstack\\.(eu|ap|us|ca|sa)-\\w{2,14}-\\d{1,2}\\.amazonaws\\.com$"  
+    ],
+    "Azure":[
+        "^[a-z0-9\\.\\-]{0,63}\\.azurewebsites\\.net$", 
+        "^[a-z0-9\\.\\-]{0,63}\\.cloudapp\\.net$", 
+        "^[a-z0-9\\.\\-]{0,63}\\.azure-api\\.net$", 
+        "^[a-z0-9\\.\\-]{0,63}\\.trafficmanager\\.net$", 
+        "^[a-z0-9\\.\\-]{0,63}\\.azureedge\\.net$", 
+        "^[a-z0-9\\.\\-]{0,63}\\.cloudapp\\.azure\\.com$"
     ],
     "Cloudfront":[
-        "^[a-z0-9\\.\\-]{0,63}\\.?cloudfront\\.net$"
+        "^[a-z0-9\\.\\-]{0,63}\\.cloudfront\\.net$"
+    ],
+    "Desk":[
+        "[a-z0-9\\.\\-]{0,63}\\.desk\\.com$"
+    ],
+    "Fastly":[
+        "[a-z0-9\\.\\-]{0,63}\\.fastly\\.net$"
+    ],
+    "Feedpress":[
+        "[a-z0-9\\.\\-]{0,63}\\.feedpress\\.me$"
+    ],
+    "Github":[
+        "[a-z0-9\\.\\-]{0,63}\\.github\\.io$",
+        "[a-z0-9\\.\\-]{0,63}\\.gitbooks\\.io$"
+    ],
+    "Heroku":[
+        "[a-z0-9\\.\\-]{0,63}\\.herokudns\\.com$",
+        "[a-z0-9\\.\\-]{0,63}\\.herokudns\\.herokuapp\\.com$", 
+        "[a-z0-9\\.\\-]{0,63}\\.herokudns\\.herokussl\\.com$"
+    ],
+    "Help Scout":[
+        "[a-z0-9\\.\\-]{0,63}\\.helpscoutdocs\\.com$"
+    ],
+    "Mark monitor":[
+        "[a-z0-9\\.\\-]{0,63}\\.edgecastdns\\.net$",
+        "[a-z0-9\\.\\-]{0,63}\\.edgecastcdn\\.net$"
+    ],
+    "Netlify":[
+        "[a-z0-9\\.\\-]{0,63}\\.netlify\\.com$"
+    ],
+    "Pantheon":[
+        "[a-z0-9\\.\\-]{0,63}\\.pantheonsite\\.io$"
+    ],
+    "Sendgrid":[
+        "[a-z0-9\\.\\-]{0,63}\\.herokudns\\.sendgrid\\.net$"
+    ],
+    "Squarespace":[
+        "[a-z0-9\\.\\-]{0,63}\\.ext-cust\\.squarespace\\.com$",
+        "[a-z0-9\\.\\-]{0,63}\\.ext\\.squarespace\\.com$"
+    ],
+
+    "UserVoice":[
+
+        "[a-z0-9\\.\\-]{0,63}\\.uservoice\\.com$"
+    ],
+    "Unbounce":[
+        "[a-z0-9\\.\\-]{0,63}\\.unbouncepages\\.com$"
+    ],
+    "Wordpress":[
+        "[a-z0-9\\.\\-]{0,63}\\.wordpress\\.com$"
+    ],
+    "WP Engine":[
+        "[a-z0-9\\.\\-]{0,63}\\.wpengine\\.com$"
+    ],
+    "Zendesk":[
+        "[a-z0-9\\.\\-]{0,63}\\.zendesk\\.com$"
     ]
+    
 }
