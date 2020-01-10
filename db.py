@@ -1,4 +1,4 @@
-from requester import requester
+from .requester import requester
 import json
 
 class DB(object):
@@ -10,44 +10,50 @@ class DB(object):
         res = requester(self.dbdomain + "/subdomains")
         return json.loads(res.text)
 
-    def get_subdomain(self, owner):
+    def get_subdomains_of_domain(self, domain):
+
+
+    def get_subdomains_of_owner(self, owner):
         
         # parameter error handling
         if not isinstance(owner, str):
-            print("[!] Error: parameter type error - owner must be str")
+            print("[!] Error: parameter type error - owner type is str")
             return None
         
-        res = requester(self.dbdomain + "/subdomains/" + owner)
+        res = requester(self.dbdomain + "/subdomains/owner/" + owner)
         return json.loads(res.text)
 
     def save_all_subdomains(self, subdomains):
         
         # parameter error handling
         if not isinstance(subdomains, dict):
-            print("[!] Error: parameter type error - subdomains must be dict")
+            print("[!] Error: parameter type error - subdomains type is dict")
             return None
         for owner, subdomain in subdomains.items():
             if not isinstance(owner, str):
-                print("[!] Error: parameter type error - key(owner) must be str")
+                print("[!] Error: parameter type error - key(owner) type is str")
                 return None          
             if not isinstance(subdomain, list):
-                print("[!] Error: parameter type error - value(each owner's subdomains) must be list")
+                print("[!] Error: parameter type error - value(each owner's subdomains) type is list")
                 return None
         
         data = json.dumps(subdomains)
         res = requester(self.dbdomain + "/subdomains", method="POST", data=data)
         return res
 
-    def save_subdomain(self, owner, subdomains):
+    def save_subdomains_of_domain(self, domain, subdomains):
+
+
+    def save_subdomains_of_owner(self, owner, subdomains):
 
         # parameter error handling
         if not isinstance(owner, str):
-            print("[!] Error: parameter type error - owner must be str")
+            print("[!] Error: parameter type error - owner type is str")
             return None
         if not isinstance(subdomains, list):
-            print("[!] Error: parameter type error - owner's subdomains must be list")
+            print("[!] Error: parameter type error - owner's subdomains type is list")
             return None
 
         data = json.dumps(subdomains)
-        res = requester(self.dbdomain + "/subdomains/" + owner, method="POST", data=data)
+        res = requester(self.dbdomain + "/subdomains/owner/" + owner, method="POST", data=data)
         return res
