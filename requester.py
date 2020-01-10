@@ -3,7 +3,7 @@ import time
 import random
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-def requester(url, data=None, GET=True):
+def requester(url, method="GET", data=None):
     time.sleep(1) #temparary delay
     
     user_agents = ['Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101 Firefox/60.0',
@@ -22,9 +22,8 @@ def requester(url, data=None, GET=True):
     #     if 'User-Agent' not in headers:
     headers['User-Agent'] = random.choice(user_agents)
     
-    if GET:
-        response = requests.get(
-            url, params=data, headers=headers, verify=False)
-    else:
+    if method == "GET":
+        response = requests.get(url, params=data, headers=headers, verify=False)
+    elif method == "POST":
         response = requests.post(url, data=data, headers=headers, verify=False)
     return response
