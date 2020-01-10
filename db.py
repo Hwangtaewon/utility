@@ -4,6 +4,7 @@ import json
 class DB(object):
 
     def __init__(self, dbdomain="http://127.0.0.1:8000"):
+        
         self.dbdomain = dbdomain
     
     def get_all_subdomains(self):
@@ -12,9 +13,15 @@ class DB(object):
 
     def get_subdomains_of_domain(self, domain):
 
-
-    def get_subdomains_of_owner(self, owner):
+        # parameter error handling
+        if not isinstance(domain, str):
+            print("[!] Error: parameter type error - domain type is str")
+            return None
+        res = requester(self.dbdomain + "/subdomains/domain/" + domain)
+        return json.loads(res.text)
         
+    def get_subdomains_of_owner(self, owner):
+
         # parameter error handling
         if not isinstance(owner, str):
             print("[!] Error: parameter type error - owner type is str")
@@ -43,6 +50,17 @@ class DB(object):
 
     def save_subdomains_of_domain(self, domain, subdomains):
 
+        # parameter error handling
+        if not isinstance(domain, str):
+            print("[!] Error: parameter type error - domain type is str")
+            return None
+        if not isinstance(subdomains, list):
+            print("[!] Error: parameter type error - owner's subdomains type is list")
+            return None
+
+        data = json.dumps(subdomains)
+        res = requester(self.dbdomain + "/subdomains/domain/" + domain, method="POST", data=data)
+        return res
 
     def save_subdomains_of_owner(self, owner, subdomains):
 
