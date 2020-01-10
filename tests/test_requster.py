@@ -41,7 +41,7 @@ class RequesterTest(unittest.TestCase):
         res = None
 
         requster = Requster()
-        res = requster.requests_with_errinfo("https://github.com/this_is_not_exist_domain")
+        res = requster.requests_with_errinfo("https://github.com/rec-and-exp/this_is_not_exist")
 
         self.assertGreaterEqual(res.status_code, 400)
 
@@ -52,7 +52,7 @@ class RequesterTest(unittest.TestCase):
 
         requster = Requster()
         
-        self.assertRaises(Exception, requster.requests_with_errinfo, "http://this_is_not_exist_domain.com")
+        self.assertRaises(Exception, requster.requests_with_errinfo, "http://this_is_not_exist_domain")
         
 
 if __name__ == '__main__':
