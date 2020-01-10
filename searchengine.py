@@ -38,13 +38,13 @@ class SearchEengine(object):
         query = ""
 
         for key in self.filters:
-            if type(self.filters[key]) is list:
-                if self.filters[key] == []:
+            if isinstance(self.filters[key], list):
+                if not self.filters[key]:
                     continue
                 filter_str = (" " + self.filter_forms[key]).join(self.filters[key])
                 query += self.filter_forms[key] + filter_str + " "
             
-            elif type(self.filters[key]) is str:
+            elif isinstance(self.filters[key], str):
                 query += self.filter_forms[key] + self.filters[key] + " "
                      
         return self.base_url.format(query=query, page_no=self.page_no)

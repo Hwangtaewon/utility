@@ -8,12 +8,12 @@ class Whois(object):
     subdomains = {}
 
     def __init__(self, path_db=""):
-        if path_db != "":
+        if path_db:
             self.path_subdomains = path_db
         self.configuration()
 
     def configuration(self):
-        if self.subdomains == {}:
+        if not self.subdomains:
             self.open_db()
 
     def open_db(self):
