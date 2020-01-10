@@ -20,18 +20,17 @@ class Requster(object):
         'Upgrade-Insecure-Requests': '1'
         }
 
+    def __init__(self, sleep_time=1):
+        self.sleep_time = sleep_time
+
+
     # Error handled request
     # Use it if you just want to get data and don't want to know what the fucking error was.
     # You just check the return is None
     def requests(self, url, method="GET", data=None):
 
-        self.headers['User-Agent'] = random.choice(self.user_agents)
-
         try:
-            if method == "GET":
-                response = requests.get(url, params=data, headers=self.headers, verify=False)
-            elif method == "POST":
-                response = requests.post(url, data=data, headers=self.headers, verify=False)
+            response = self.requests_with_errinfo(url, method, data)
         except Exception as e:
             return None
 
@@ -43,6 +42,8 @@ class Requster(object):
     # Use it if you want to handle error manually 
     def requests_with_errinfo(self, url, method="GET", data=None):
         
+        time.sleep(self.sleep_time)
+
         self.headers['User-Agent'] = random.choice(self.user_agents)
 
         if method == "GET":
