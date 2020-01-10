@@ -23,16 +23,16 @@ class Requster(object):
     # Error handled request
     # Use it if you just want to get data and don't want to know what the fucking error was.
     # You just check the return is None
-    def requests(url, method="GET", data=None):
+    def requests(self, url, method="GET", data=None):
 
         self.headers['User-Agent'] = random.choice(self.user_agents)
 
         try:
             if method == "GET":
-                response = requests.get(url, params=data, headers=headers, verify=False)
+                response = requests.get(url, params=data, headers=self.headers, verify=False)
             elif method == "POST":
-                response = requests.post(url, data=data, headers=headers, verify=False)
-        except exceptions:
+                response = requests.post(url, data=data, headers=self.headers, verify=False)
+        except Exception as e:
             return None
 
         if response.status_code >= 400:
@@ -41,7 +41,7 @@ class Requster(object):
         return response
 
     # Use it if you want to handle error manually 
-    def requests_with_errinfo(url, method="GET", data=None):
+    def requests_with_errinfo(self, url, method="GET", data=None):
         
         self.headers['User-Agent'] = random.choice(self.user_agents)
 
