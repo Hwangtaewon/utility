@@ -20,7 +20,7 @@ class DB(object):
         res = requester(self.dbdomain + "/subdomains/" + owner)
         return json.loads(res.text)
 
-    def post_all_subdomains(self, subdomains):
+    def save_all_subdomains(self, subdomains):
         
         # parameter error handling
         if not isinstance(subdomains, dict):
@@ -38,7 +38,7 @@ class DB(object):
         res = requester(self.dbdomain + "/subdomains", method="POST", data=data)
         return res
 
-    def post_subdomain(self, owner, subdomains):
+    def save_subdomain(self, owner, subdomains):
 
         # parameter error handling
         if not isinstance(owner, str):
@@ -51,4 +51,3 @@ class DB(object):
         data = json.dumps(subdomains)
         res = requester(self.dbdomain + "/subdomains/" + owner, method="POST", data=data)
         return res
-
