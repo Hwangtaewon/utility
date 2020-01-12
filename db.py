@@ -10,6 +10,11 @@ class DB(object):
     
     def get_all_subdomains(self):
         res = Requester.requests(self.dbdomain + "/subdomains")
+
+        if not res:
+            print("[!] Get all subdomains fail")
+            return None
+
         return json.loads(res.text)
 
     def get_subdomains_of_domain(self, domain):
@@ -20,8 +25,9 @@ class DB(object):
             return None
 
         res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain)
-        
+
         if not res:
+            print("[!] Get subdomains of domain fail")
             return None
 
         return json.loads(res.text)
@@ -36,6 +42,7 @@ class DB(object):
         res = self.requester.requests(self.dbdomain + "/subdomains/owner/" + owner)
 
         if not res:
+            print("[!] Get subdomains of owner fail")
             return None
 
         return json.loads(res.text)
@@ -53,9 +60,14 @@ class DB(object):
             if not isinstance(subdomain, list):
                 print("[!] Error: parameter type error - value(each owner's subdomains) type is list")
                 return None
-        
+
         data = json.dumps(subdomains)
         res = self.requester.requests(self.dbdomain + "/subdomains", method="POST", data=data)
+
+        if not res:
+            print("[!] Save all subdomains fail")
+            return None
+
         return res
 
     def save_subdomains_of_domain(self, domain, subdomains):
@@ -70,6 +82,11 @@ class DB(object):
 
         data = json.dumps(subdomains)
         res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain, method="POST", data=data)
+
+        if not res:
+            print("[!] Save subdomains of domain fail")
+            return None
+
         return res
 
     def save_subdomains_of_owner(self, owner, subdomains):
@@ -84,4 +101,9 @@ class DB(object):
 
         data = json.dumps(subdomains)
         res = self.requester.requests(self.dbdomain + "/subdomains/owner/" + owner, method="POST", data=data)
+
+        if not res:
+            print("[!] Save subdomains of owner fail")
+            return None
+
         return res
