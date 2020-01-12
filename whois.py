@@ -16,6 +16,12 @@ class Whois(object):
         if self.subdomains == {}:
             self.open_db()
 
+    def list_regex_find(self, url, list_regex):
+        for regex in list_regex:
+            if regex.findall(url) != []:
+                return True
+        return False
+
     def open_db(self):
         try:
             f = open(self.path_subdomains, "r")
@@ -58,11 +64,6 @@ class Whois(object):
 
         return ""
 
-    def list_regex_find(self, url, list_regex):
-        for regex in list_regex:
-            if regex.findall(url) != []:
-                return True
-        return False
 
     # use whois service
     def query_whois(self, url):
