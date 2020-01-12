@@ -1,4 +1,4 @@
-from .requester import requester
+from .requester import Requester
 import json
 
 class DB(object):
@@ -6,9 +6,10 @@ class DB(object):
     def __init__(self, dbdomain="http://127.0.0.1:8000"):
         
         self.dbdomain = dbdomain
+        self.requester = Requester()
     
     def get_all_subdomains(self):
-        res = requester(self.dbdomain + "/subdomains")
+        res = Requester.requests(self.dbdomain + "/subdomains")
         return json.loads(res.text)
 
     def get_subdomains_of_domain(self, domain):
@@ -17,7 +18,12 @@ class DB(object):
         if not isinstance(domain, str):
             print("[!] Error: parameter type error - domain type is str")
             return None
-        res = requester(self.dbdomain + "/subdomains/domain/" + domain)
+
+        res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain)
+        
+        if not res:
+            return None
+
         return json.loads(res.text)
         
     def get_subdomains_of_owner(self, owner):
@@ -26,8 +32,12 @@ class DB(object):
         if not isinstance(owner, str):
             print("[!] Error: parameter type error - owner type is str")
             return None
-        
-        res = requester(self.dbdomain + "/subdomains/owner/" + owner)
+
+        res = self.requester.requests(self.dbdomain + "/subdomains/owner/" + owner)
+
+        if not res:
+            return None
+
         return json.loads(res.text)
 
     def save_all_subdomains(self, subdomains):
@@ -45,7 +55,7 @@ class DB(object):
                 return None
         
         data = json.dumps(subdomains)
-        res = requester(self.dbdomain + "/subdomains", method="POST", data=data)
+        res = self.requester.requests(self.dbdomain + "/subdomains", method="POST", data=data)
         return res
 
     def save_subdomains_of_domain(self, domain, subdomains):
@@ -59,7 +69,7 @@ class DB(object):
             return None
 
         data = json.dumps(subdomains)
-        res = requester(self.dbdomain + "/subdomains/domain/" + domain, method="POST", data=data)
+        res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain, method="POST", data=data)
         return res
 
     def save_subdomains_of_owner(self, owner, subdomains):
@@ -73,5 +83,5 @@ class DB(object):
             return None
 
         data = json.dumps(subdomains)
-        res = requester(self.dbdomain + "/subdomains/owner/" + owner, method="POST", data=data)
+        res = self.requester.requests(self.dbdomain + "/subdomains/owner/" + owner, method="POST", data=data)
         return res

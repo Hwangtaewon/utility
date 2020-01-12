@@ -2,13 +2,14 @@ import urllib.parse as urlparse
 import urllib.parse as urllib
 
 import re
-from .requester import requester
+from .requester import Requester
 
 class SearchEengine(object):
 
     def __init__(self, callback):
         self.filters = dict.fromkeys(["site", "nosearch"])
         self.callback = callback
+        self.requester = Requester()
 
     def add_filter(self, new_filter):
         
@@ -50,7 +51,14 @@ class SearchEengine(object):
         return self.base_url.format(query=query, page_no=self.page_no)
 
     def search(self, query):
-        return requester(query)
+        
+        try:
+            res = self.requester.requests_with_errinfo(query)
+            return res
+
+        except Exception as e:
+            print("[!] Error: Requests fail")
+            return None
 
     # get all search results
     def search_all(self):
@@ -69,7 +77,10 @@ class SearchEengine(object):
             
             query = self.generate_query()
             res = self.search(query)
-            
+
+            if not res:
+                break
+
             if not self.check_response_errors(res):
                 print("[!] Error:", self.engine_name, "Search fail")
                 break

@@ -3,7 +3,7 @@ import time
 import random
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-class Requster(object):
+class Requester(object):
     
     user_agents = [
         'Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101 Firefox/60.0',
