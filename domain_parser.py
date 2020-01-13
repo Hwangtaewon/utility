@@ -1,18 +1,20 @@
 import sys
 import re
 import math
+import os
 
 class DomainParser:
     
+    path_suffix = os.path.dirname(__file__) +"/db/suffix_list.txt"
+
     def __init__(self):
-    
-        f = open("../db/suffix_list.txt","r")
+        
+        f = open(self.path_suffix, "r")
         lines = f.readlines()
         self.suffix_list = list()
 
         for line in lines:
             self.suffix_list.append(line)
-
 
         f.close()
 
