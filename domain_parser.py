@@ -46,14 +46,6 @@ class DomainParser:
 
         return re.findall("^(https?://.*?)(?:/[^/]*?)?$",url)
 
-    def get_domain(self,url,suffix):
-        
-        result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
-        if result:
-            return result
-
-        return re.findall("https?://(.*?\."+suffix+")(?:/.*)?$",url)
-
     def get_domain_name(self,url,suffix):
         
         result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
