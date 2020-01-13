@@ -46,15 +46,17 @@ class DomainParser:
 
     def get_domain(self,url,suffix):
         
-        if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url):
-            return re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
+        result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
+        if result:
+            return result
 
         return re.findall("https?://(.*?\."+suffix+")(?:/.*)?$",url)
 
     def get_domain_name(self,url,suffix):
         
-        if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url):
-            return re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
+        result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
+        if result:
+            return result
 
         return re.findall("https?://(.*?"+suffix+")(?:/.*)?$",url)
 
@@ -74,8 +76,10 @@ class DomainParser:
 
     def get_root_domain(self,url,suffix):
         
-        if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url):
-            return re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
+        result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
+        if result:
+            return result
+
         return re.findall("https?://(?:.*?)\.(.*?"+suffix+")(?:/.*)?$",url)
 
     def get_suffix_list(self):
