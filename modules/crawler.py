@@ -8,8 +8,8 @@ class Crawler(object):
 
         while url:
             try:
-                res = self.requester.request_with_no_handling(url)
-                url = callback(res)
+                res, e = self.requester.requests_with_errinfo(url)
+                url = callback(res, e)
 
             except Exception as e:
                 print("[!] Error: Requests fail")
