@@ -8,7 +8,7 @@ class DomainParser:
     path_suffix = os.path.dirname(__file__) +"/../db/suffix_list.json"
 
     def __init__(self):
-        
+
         f = open(self.path_suffix, "r")
         self.suffix_list = f.read()
         self.suffix_list = json.loads(self.suffix_list)
@@ -23,11 +23,14 @@ class DomainParser:
             return re.findall("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
 
         for suffix in self.suffix_list:
-            if re.search("(https?://[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$",url):
-                if longest < len(suffix) : 
-                    longest = len(suffix)
-                    res = suffix
-    
+            result = re.search("(https?://[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$", url)
+            if not result:
+                continue
+
+            if longest < len(suffix) : 
+                longest = len(suffix)
+                res = suffix
+
         return res
 
     def get_core_keyword(self,url,suffix):
