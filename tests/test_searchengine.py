@@ -6,9 +6,9 @@ class SearchEngineTest(unittest.TestCase):
     def callback(self):
         return "test"
 
-    def test_set_filter(self):
-        
-        print("[*] test: set_filter sucess case - init filter")
+    def test_set_all_filters(self):
+
+        print("[*] test: set_all_filters sucess case - init filter")
 
         testcase = [
             ({"site":"example.com", "nosearch":["www.example.com"]}, {"site":"example.com", "nosearch":["www.example.com"]}),
@@ -18,26 +18,26 @@ class SearchEngineTest(unittest.TestCase):
 
         for test in testcase:
             searchengine = SearchEengine(self.callback)
-            searchengine.set_filter(test[0])
+            searchengine.set_all_filters(test[0])
 
             self.assertEqual(searchengine.filters, test[1])
 
 
-        print("[*] test: set_filter sucess case - update filter")
+        print("[*] test: set_all_filters sucess case - change filter")
 
         searchengine = SearchEengine(self.callback)
-        searchengine.set_filter({"nosearch":["www.example.com"]})
+        searchengine.set_all_filters({"nosearch":["www.example.com"]})
         
         testcase = [
-            ({"site":"example.com"}, {"site":"example.com", "nosearch":["www.example.com"]}),
-            ({"nosearch":None}, {"site":"example.com", "nosearch":None})
+            ({"site":"example.com"}, {"site":"example.com", "nosearch":None}),
+            ({"nosearch":None}, {"site":None, "nosearch":None})
         ]
 
         for test in testcase:
-            searchengine.set_filter(test[0])
+            searchengine.set_all_filters(test[0])
             self.assertEqual(searchengine.filters, test[1])
 
-        print("[*] test: set_filter fail case")
+        print("[*] test: set_all_filters fail case")
 
         testcase = [
             {"wrong_key":"test"},
@@ -69,10 +69,30 @@ class SearchEngineTest(unittest.TestCase):
         searchengine = SearchEengine(self.callback)
         self.assertEqual(searchengine.check_response_errors(res), False)
 
-        self.assertEqual(searchengine.filters, new_filter)
-    
+    def test_search(self):
+        searchengine = Google('example.com')
+        # searchengine.search()
+        # searchengine.enum_domains()
+
+class GoogleTest(unittest.TestCase):
+
     def callback(self):
         return "test"
+
+    def test_generate_query(self):
+
+        print("[*] test: generate_query")
+        
+        testcase = [
+            ({"site":"example.com", "nosearch":["www.example.com"]}, "https://www.google.com/search?q=site:example.com -www.example.com &btnG=Search&hl=en-US&gbv=1&start=0&filter=0"),
+            ({"site":"example.com"}, "https://www.google.com/search?q=site:example.com &btnG=Search&hl=en-US&gbv=1&start=0&filter=0")
+        ]
+
+        google = Google(self.callback)
+
+        for test in testcase:
+            google.set_all_filters(test[0])
+            self.assertEqual(google.generate_query(), test[1])
 
 if __name__ == '__main__':
     sys.path.insert(0, '../')
