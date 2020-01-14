@@ -20,6 +20,6 @@ class WhoisTest(unittest.TestCase):
 
 if __name__ == '__main__':
     sys.path.insert(0, '../')
-    from whois import *
+    from modules.whois import *
     
     unittest.main()

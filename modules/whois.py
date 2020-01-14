@@ -4,7 +4,7 @@ import re
 
 class Whois(object):
 
-    path_subdomains = os.path.dirname(__file__) +"/db/subdomains.json"
+    path_subdomains = os.path.dirname(__file__) +"/../db/subdomains.json"
     subdomains = {}
 
     def __init__(self, path_db=""):

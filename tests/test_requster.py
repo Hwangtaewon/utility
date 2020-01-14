@@ -92,6 +92,6 @@ class RequesterTest(unittest.TestCase):
 
 if __name__ == '__main__':
     sys.path.insert(0, '../')
-    from requester import *
+    from modules.requester import *
     
     unittest.main()
