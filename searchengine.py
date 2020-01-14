@@ -53,7 +53,7 @@ class SearchEengine(object):
     def search(self, query):
         
         try:
-            res = self.requester.requests_with_errinfo(query)
+            res = self.requester.request_with_no_handling(query)
             return res
 
         except Exception as e:
