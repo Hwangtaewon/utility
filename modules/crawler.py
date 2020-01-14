@@ -3,14 +3,16 @@ from .requester import Requester
 class Crawler(object):
     def __init__(self):
         self.requester = Requester()
-    
+
+
     def crawl(self, url, callback):
 
         while url:
-            try:
-                res, e = self.requester.requests_with_errinfo(url)
-                url = callback(res, e)
+            res = self.requester.requests(url)
+            url = callback(url, res)
 
-            except Exception as e:
-                print("[!] Error: Requests fail")
-                return None
+    def crawl_with_errinfo(self, url, callback):
+
+        while url:
+            res, e = self.requester.requests_with_errinfo(url)
+            url = callback(url, res, e)
