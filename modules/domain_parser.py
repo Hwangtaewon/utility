@@ -63,16 +63,6 @@ class DomainParser:
             return result[0]
         return None
 
-    def get_fileless_url(self, url, suffix):
-        
-        if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url):
-            return re.findall("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
-
-        result = re.findall("(https?://.*?\."+suffix+")(?:/.*)?$", url)
-        if result:
-            return result[0]
-        return None
-
     def get_pathless_url(self, url):
         
         if re.search("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url):
