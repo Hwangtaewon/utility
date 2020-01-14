@@ -11,15 +11,15 @@ class SearchEengine(object):
         self.callback = callback
         self.requester = Requester()
 
-    def add_filter(self, new_filter):
+    def set_filter(self, new_filter):
         
-        if list(set(new_filter) - set(self.filters)) != []:
-            print("[!] Error: Wrong filter key " + str(set(new_filter) - set(self.filters)))
-            exit(-1)
+        if set(new_filter.keys()) - set(self.filters.keys()):
+            print("[!] Error: Wrong filter key " + str(set(new_filter.keys()) - set(self.filters.keys())))
+            raise ValueError("Wrong filter key")
 
         if self.filters == new_filter:
             self.change_query = False
-            return 
+            return None
 
         for key in new_filter:
             self.filters[key] = new_filter[key]
