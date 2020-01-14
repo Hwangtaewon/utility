@@ -161,7 +161,7 @@ class DomainParserTest(unittest.TestCase):
             result = domain_parser.get_root_domain(url, suffix)
             self.assertEqual(result, sucess_res)
 
-        print("[*] test: get_core_keyword fail case")
+        print("[*] test: get_root_domain fail case")
         
         test_case = {
             "http://localhost/chatting/index.php":[],
@@ -171,7 +171,6 @@ class DomainParserTest(unittest.TestCase):
             suffix = domain_parser.find_longest_suffix(url)
             result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
-
 
 if  __name__ == '__main__':
 

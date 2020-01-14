@@ -37,43 +37,62 @@ class DomainParser:
         
         result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
         if result:
-            return result
+            return result[0]
 
-        return re.findall("https?://(?:.*?\.)?([a-zA-Z0-9-_\.]*?)\." + suffix + "(?:/.*)?$", url)
+        result = re.findall("https?://(?:.*?\.)?([a-zA-Z0-9-_\.]*?)\." + suffix + "(?:/.*)?$", url)
+        if result:
+            return result[0]
+        
+        return None
 
     def get_current_path(self, url):
 
-        return re.findall("^(https?://.*?)(?:/[^/]*?)?$", url)
+        result= re.findall("^(https?://.*?)(?:/[^/]*?)?$", url)
+        if result:
+            return result[0]
+        return None
 
     def get_domain_name(self, url, suffix):
         
         result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
         if result:
-            return result
+            return result[0]
 
-        return re.findall("https?://(.*?" + suffix + ")(?:/.*)?$", url)
+        result = re.findall("https?://(.*?" + suffix + ")(?:/.*)?$", url)
+        if result:
+            return result[0]
+        return None
 
     def get_fileless_url(self, url, suffix):
         
         if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url):
             return re.findall("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
 
-        return re.findall("(https?://.*?\."+suffix+")(?:/.*)?$", url)
+        result = re.findall("(https?://.*?\."+suffix+")(?:/.*)?$", url)
+        if result:
+            return result[0]
+        return None
 
     def get_pathless_url(self, url):
         
         if re.search("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url):
             return re.findall("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
 
-        return re.findall("(https?://.*?\..*?)(?:/.*)?$", url)
+        result = re.findall("(https?://.*?\..*?)(?:/.*)?$", url)
+        if result:
+            return result[0]
+        return None
 
     def get_root_domain(self, url, suffix):
         
         result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
         if result:
-            return result
+            return result[0]
 
-        return re.findall("https?://(?:.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
+        result = re.findall("https?://(?:.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
+        if result:
+            return result[0]
+        return None
 
     def get_suffix_list(self):
         return self.suffix_list
@@ -83,4 +102,7 @@ class DomainParser:
         if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url):
             return None
 
-        return re.findall("(https?://[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$", url)
+        result = re.findall("(https?://[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$", url)
+        if result:
+            return result[0]
+        return None
