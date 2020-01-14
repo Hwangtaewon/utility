@@ -35,6 +35,19 @@ class SearchEengine(object):
             self.filters[key] = new_filter[key]
             self.change_query = True
 
+    # def add_filters(self, new_filter):
+
+    #     if not is_filter_valid(new_filter):
+    #         return None
+
+    #     if self.filters == new_filter:
+    #         self.change_query = False
+    #         return None
+
+    #     for key in new_filter:
+    #         self.filters[key] = new_filter[key]
+    #         self.change_query = True
+
     # override    
     def check_response_endpage(self, res):
         pass

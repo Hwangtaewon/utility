@@ -47,7 +47,51 @@ class SearchEngineTest(unittest.TestCase):
 
         for new_filter in testcase:
             searchengine = SearchEengine(self.callback)
-            self.assertRaises(ValueError, searchengine.set_filter, new_filter)
+            self.assertRaises(ValueError, searchengine.set_all_filters, new_filter)
+       
+    def test_add_filters(self):
+        
+        print("[*] test: add_filters sucess case - init filter")
+
+        testcase = [
+            ({"site":"example.com", "nosearch":["www.example.com"]}, {"site":"example.com", "nosearch":["www.example.com"]}),
+            ({"nosearch":None}, {"site":None, "nosearch":None}),
+            ({"nosearch":["www.example.com"]}, {"site":None, "nosearch":["www.example.com"]})
+        ]
+
+        for test in testcase:
+            searchengine = SearchEengine(self.callback)
+            searchengine.add_filters(test[0])
+
+            self.assertEqual(searchengine.filters, test[1])
+
+
+        print("[*] test: add_filters sucess case - update filter")
+
+        searchengine = SearchEengine(self.callback)
+        searchengine.add_filters({"nosearch":["www.example.com"]})
+        
+        testcase = [
+            ({"site":"example.com"}, {"site":"example.com", "nosearch":["www.example.com"]}),
+            ({"nosearch":None}, {"site":"example.com", "nosearch":["www.example.com"]}), 
+            ({"nosearch":"\"this str\""}, {"site":"example.com", "nosearch":["www.example.com", "\"this str\""]})
+        ]
+
+        for test in testcase:
+            searchengine.add_filters(test[0])
+            self.assertEqual(searchengine.filters, test[1])
+
+        print("[*] test: add_filters fail case")
+
+        testcase = [
+            {"wrong_key":"test"},
+            {"wrong_key":"test", "site":"example.com"},
+            { "site":"example.com", "wrong_key":"test"}
+        ]
+
+        for new_filter in testcase:
+            searchengine = SearchEengine(self.callback)
+            self.assertRaises(ValueError, searchengine.add_filters, new_filter)
 
 
     def test_check_response_errors(self):
