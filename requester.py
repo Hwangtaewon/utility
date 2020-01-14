@@ -30,7 +30,7 @@ class Requester(object):
     def requests(self, url, method="GET", data=None):
 
         try:
-            response = self.requests_with_errinfo(url, method, data)
+            response = self.request_with_no_handling(url, method, data)
         except Exception as e:
             return None
 
@@ -39,9 +39,73 @@ class Requester(object):
 
         return response
 
-    # Use it if you want to handle error manually 
+    # Use it if you want to handle error manually
     def requests_with_errinfo(self, url, method="GET", data=None):
         
+        try:
+            response = self.request_with_no_handling(url, method, data)
+
+        except requests.exceptions.HTTPError as e:
+            return None, e
+            
+        except requests.exceptions.ConnectionError as e:
+            return None, e
+            
+        except requests.exceptions.ProxyError as e:
+            return None, e
+            
+        except requests.exceptions.SSLError as e:
+            return None, e
+            
+        except requests.exceptions.Timeout as e:
+            return None, e
+            
+        except requests.exceptions.ConnectTimeout as e:
+            return None, e
+            
+        except requests.exceptions.ReadTimeout as e:
+            return None, e
+            
+        except requests.exceptions.URLRequired as e:
+            return None, e
+            
+        except requests.exceptions.TooManyRedirects as e:
+            return None, e
+            
+        except requests.exceptions.MissingSchema as e:
+            return None, e
+            
+        except requests.exceptions.InvalidURL as e:
+            return None, e
+            
+        except requests.exceptions.InvalidHeader as e:
+            return None, e
+            
+        except requests.exceptions.InvalidProxyURL as e:
+            return None, e
+            
+        except requests.exceptions.ChunkedEncodingError as e:
+            return None, e
+            
+        except requests.exceptions.ContentDecodingError as e:
+           return None, e
+            
+        except requests.exceptions.StreamConsumedError as e:
+            return None, e
+            
+        except requests.exceptions.RetryError as e:
+            return None, e
+            
+        except requests.exceptions.UnrewindableBodyError as e:
+            return None, e
+
+        # handling other exception
+        except Exception as e:
+            return None, e
+
+        return response,None
+
+    def request_with_no_handling(self, url, method="GET", data=None):
         time.sleep(self.sleep_time)
 
         self.headers['User-Agent'] = random.choice(self.user_agents)
