@@ -9,12 +9,12 @@ class DomainParserTest(unittest.TestCase):
 
         test_case = {
             "https://www.naver.com":"com",
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"net"
-            # "https://logins.daum.net/accounts/signinform.do":"net",
-            # "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
-            # "https://www.istarbucks.co.kr/index.do":"co.kr",
-            # "https://www.naver.kr":"kr",
-            # "https://www.naver.co.kr":"co.kr",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"net",
+            "https://logins.daum.net/accounts/signinform.do":"net",
+            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
+            "https://www.istarbucks.co.kr/index.do":"co.kr",
+            "https://www.naver.kr":"kr",
+            "https://www.example.emergency.aero/":"emergency.aero"
             }
 
         domain_parser = DomainParser()
@@ -41,7 +41,7 @@ class DomainParserTest(unittest.TestCase):
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_core_keyword(url,suffix)
+            result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
 
 
@@ -53,7 +53,7 @@ class DomainParserTest(unittest.TestCase):
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_core_keyword(url,suffix)
+            result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
 
     def test_get_current_path(self):
@@ -105,14 +105,14 @@ class DomainParserTest(unittest.TestCase):
 
         test_case = {
             "https://www.naver.com":["https://www.naver.com"],
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["https://logins.daum.net"],
-            "https://logins.daum.net/accounts/signinform.do":["https://logins.daum.net"],
-            "http://localhost/chatting/index.php":[],
-            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["https://logins.daum.net/accounts"],
+            "https://logins.daum.net/accounts/signinform.do":["https://logins.daum.net/accounts"],
+            "http://localhost/chatting/index.php":["http://localhost/chatting"],
+            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2/chatting"],
             "https://www.istarbucks.co.kr/index.do":["https://www.istarbucks.co.kr"],
-            "https://logins.daum.net/accounts/test/signinform.do?url=https":["https://logins.daum.net"]
+            "https://logins.daum.net/accounts/test/signinform.do?url=https":["https://logins.daum.net/accounts/test"]
             }
-         
+
         domain_parser = DomainParser()
 
         for url, sucess_res in test_case.items():
@@ -121,6 +121,25 @@ class DomainParserTest(unittest.TestCase):
             self.assertEqual(result, sucess_res)
 
 
+    def test_get_pathless_url(self):
+
+        print("[*] test: pathless_url sucess case")
+
+        test_case = {
+            "https://www.naver.com":["https://www.naver.com"],
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["https://logins.daum.net"],
+            "https://logins.daum.net/accounts/signinform.do":["https://logins.daum.net"],
+            "http://localhost/chatting/index.php":[],
+            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
+            "https://www.istarbucks.co.kr/index.do":["https://www.istarbucks.co.kr"],
+            "https://logins.daum.net/accounts/test/signinform.do?url=https":["https://logins.daum.net"]
+            }
+
+        domain_parser = DomainParser()
+
+        for url, sucess_res in test_case.items():
+            result = domain_parser.get_pathless_url(url)
+            self.assertEqual(result, sucess_res)
 
     def test_get_root_domain(self):
 
@@ -139,7 +158,7 @@ class DomainParserTest(unittest.TestCase):
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_root_domain(url,suffix)
+            result = domain_parser.get_root_domain(url, suffix)
             self.assertEqual(result, sucess_res)
 
         print("[*] test: get_core_keyword fail case")
@@ -150,7 +169,7 @@ class DomainParserTest(unittest.TestCase):
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_core_keyword(url,suffix)
+            result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
 
 
