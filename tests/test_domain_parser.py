@@ -154,9 +154,8 @@ class DomainParserTest(unittest.TestCase):
             self.assertEqual(result, sucess_res)
 
 
-
 if  __name__ == '__main__':
 
     sys.path.insert(0, '../')
-    from domain_parser import *
+    from modules.domain_parser import *
     unittest.main()

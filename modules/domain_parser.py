@@ -5,7 +5,7 @@ import json
 
 class DomainParser:
     
-    path_suffix = os.path.dirname(__file__) +"/db/suffix_list.json"
+    path_suffix = os.path.dirname(__file__) +"/../db/suffix_list.json"
 
     def __init__(self):
         
