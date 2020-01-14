@@ -1,36 +1,32 @@
 import sys
 import re
-import math
 import os
+import json
 
 class DomainParser:
     
-    path_suffix = os.path.dirname(__file__) +"/db/suffix_list.txt"
+    path_suffix = os.path.dirname(__file__) +"/db/suffix_list.json"
 
     def __init__(self):
         
         f = open(self.path_suffix, "r")
-        lines = f.readlines()
-        self.suffix_list = list()
-
-        for line in lines:
-            self.suffix_list.append(line)
-
+        self.suffix_list = f.read()
+        self.suffix_list = json.loads(self.suffix_list)
         f.close()
 
     def find_longest_suffix(self,url):
 
         res = "localhost"
-        longest = -math.inf
+        longest = -1
 
         if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url):
             return re.findall("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)",url)
 
         for suffix in self.suffix_list:
-            if re.search("(https?://[a-zA-Z0-9-_\.]*?)\."+suffix[0:-1]+"(/.*)?$",url):
-                if longest < len(suffix[0:-1]) : 
-                    longest = len(suffix[0:-1])
-                    res = suffix[0:-1]
+            if re.search("(https?://[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$",url):
+                if longest < len(suffix) : 
+                    longest = len(suffix)
+                    res = suffix
     
         return res
 

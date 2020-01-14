@@ -3,25 +3,25 @@ import unittest
 
 class DomainParserTest(unittest.TestCase):
 
-    # def test_find_longest_suffix(self):
+    def test_find_longest_suffix(self):
 
-    #     print("[*] test: find_longest_suffix sucess case")
+        print("[*] test: find_longest_suffix sucess case")
 
-    #     test_case = {
-    #         "https://www.naver.com":"com",
-    #         "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"net",
-    #         "https://logins.daum.net/accounts/signinform.do":"net",
-    #         "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
-    #         "https://www.istarbucks.co.kr/index.do":"co.kr",
-    #         "https://www.naver.kr":"kr",
-    #         "https://www.naver.co.kr":"co.kr",
-    #         }
+        test_case = {
+            "https://www.naver.com":"com",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"net"
+            # "https://logins.daum.net/accounts/signinform.do":"net",
+            # "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
+            # "https://www.istarbucks.co.kr/index.do":"co.kr",
+            # "https://www.naver.kr":"kr",
+            # "https://www.naver.co.kr":"co.kr",
+            }
 
-    #     domain_parser = DomainParser()
+        domain_parser = DomainParser()
 
-    #     for url, sucess_res in test_case.items():
-    #         result = domain_parser.find_longest_suffix(url)
-    #         self.assertEqual(result, sucess_res)
+        for url, sucess_res in test_case.items():
+            result = domain_parser.find_longest_suffix(url)
+            self.assertEqual(result, sucess_res)
 
 
     def test_get_core_keyword(self):
@@ -36,7 +36,7 @@ class DomainParserTest(unittest.TestCase):
             "https://www.istarbucks.co.kr/index.do":["istarbucks"],
             "https://logins.daum.net/accounts/signinform.do?url=https":["daum"]
             }
-         
+
         domain_parser = DomainParser()
 
         for url, sucess_res in test_case.items():
@@ -90,7 +90,7 @@ class DomainParserTest(unittest.TestCase):
             "https://www.istarbucks.co.kr/index.do":["www.istarbucks.co.kr"],
             "https://logins.daum.net/accounts/test/signinform.do?url=https":["logins.daum.net"]
             }
-         
+
         domain_parser = DomainParser()
 
         for url, sucess_res in test_case.items():
@@ -100,6 +100,9 @@ class DomainParserTest(unittest.TestCase):
 
 
     def test_get_fileless_url(self):
+
+        print("[*] test: get_fileless_url sucess case")
+
         test_case = {
             "https://www.naver.com":["https://www.naver.com"],
             "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["https://logins.daum.net"],
