@@ -10,16 +10,26 @@ class SearchEengine(object):
         self.filters = dict.fromkeys(["site", "nosearch"])
         self.callback = callback
         self.requester = Requester()
+        self.page_no = 0
 
-    def add_filter(self, new_filter):
+    def is_filter_valid(self, new_filter):
+
+        if set(new_filter.keys()) - set(self.filters.keys()):
+            print("[!] Error: Wrong filter key " + str(set(new_filter.keys()) - set(self.filters.keys())))
+            raise ValueError("Wrong filter key")
         
-        if list(set(new_filter) - set(self.filters)) != []:
-            print("[!] Error: Wrong filter key " + str(set(new_filter) - set(self.filters)))
-            exit(-1)
+        return True
+
+    def set_all_filters(self, new_filter):
+        
+        if not self.is_filter_valid(new_filter):
+            return None
 
         if self.filters == new_filter:
             self.change_query = False
-            return 
+            return None
+
+        self.filters = dict.fromkeys(["site", "nosearch"])
 
         for key in new_filter:
             self.filters[key] = new_filter[key]
