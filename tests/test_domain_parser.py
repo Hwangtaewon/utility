@@ -48,7 +48,7 @@ class DomainParserTest(unittest.TestCase):
         print("[*] test: get_core_keyword fail case")
         
         test_case = {
-            "http://localhost/chatting/index.php":[],
+            "http://localhost/chatting/index.php":None,
         }
 
         for url, sucess_res in test_case.items():
@@ -148,6 +148,22 @@ class DomainParserTest(unittest.TestCase):
             suffix = domain_parser.find_longest_suffix(url)
             result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
+
+    def test_merge_dir_ascending(self):
+
+        print("[*] test: merge_dir_ascending sucess case")
+        
+        test_case = {
+            "http://www.namyangjuds.co.kr/dsnam/2013_sub6/info/../ours/../info/../ours/../info/../../2013_img/common/sub_tel.gif":"http://www.namyangjuds.co.kr/dsnam/2013_img/common/sub_tel.gif"
+        }
+
+        domain_parser = DomainParser()
+        
+        for url, sucess_res in test_case.items():
+            result = domain_parser.merge_dir_ascending(url)
+            print(result)
+            self.assertEqual(result, sucess_res)
+
 
 if  __name__ == '__main__':
 

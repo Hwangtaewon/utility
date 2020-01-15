@@ -88,7 +88,7 @@ class DomainParser:
         return self.suffix_list
 
     def get_url_without_suffix(self, url, suffix):
-        
+
         if re.search("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url):
             return None
 
@@ -96,3 +96,12 @@ class DomainParser:
         if result:
             return result[0]
         return None
+
+    def merge_dir_ascending(self,url):
+        
+        while url.find('/../') != -1:
+            tail = url.find('/../')
+            head = url[0:tail].rfind('/')
+            url = url[:head] + url[tail+3:]
+
+        return url
