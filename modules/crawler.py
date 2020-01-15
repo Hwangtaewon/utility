@@ -3,7 +3,9 @@ import re
 
 class Crawler(object):
 
-    regex_links = re.compile("href=\"(.*?)\"|href=\'(.*?)\'|src=\"(.*?)\"|action=\"(.*?)\"|action=\'(.*?)\'|src=\"(.*?)\"|src=\'(.*?)\'|open\(\"(.*?)\"|open\(\'(.*?)\'")
+    regex = {
+        "links": re.compile("href=\"(.*?)\"|href=\'(.*?)\'|src=\"(.*?)\"|action=\"(.*?)\"|action=\'(.*?)\'|src=\"(.*?)\"|src=\'(.*?)\'|open\(\"(.*?)\"|open\(\'(.*?)\'")
+    }
 
     def __init__(self):
         self.requester = Requester()
@@ -43,26 +45,29 @@ class Crawler(object):
         res = filter(None, res.split('\n'))
 
         for line in res:
-            link = self.__extract_link(line)
+            link = self.__extract("links", line)
             links.update(link)
 
         return links
 
-    def __extract_link(self, line):
+    def __extract(self, target, line):
 
-        new_links = set()
+        new_extract = set()
 
-        if not line:
-            return new_links
-    
-        links = self.regex_links.findall(line)
-       
-        if not links:
-            return new_links
+        if not self.regex[target]:
+            print("[!] Error: Wrong input")
+            return new_extract
+        
+        extract = self.regex[target].findall(line)
 
-        links = links[0]
-        for link in links:
-            if link:
-                new_links.add(link)
+        if not extract:
+            return new_extract
 
-        return new_links
+        extract = extract[0]
+        for e in extract:
+            if not e:
+                continue
+            new_extract.add(e)
+            
+        return new_extract
+
