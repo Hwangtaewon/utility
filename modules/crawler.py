@@ -32,25 +32,13 @@ class Crawler(object):
                 url = callback(url, None, e)
                 continue
 
-            links = self.__get_links(res.text, url)
+            links = self.__extract("links", res.text)
             url = callback(url, links, e)
 
     def crawl_images(self, url, callback):
         pass
 
-    def __get_links(self, res, url):
-
-        links = set()
-
-        res = filter(None, res.split('\n'))
-
-        for line in res:
-            link = self.__extract("links", line)
-            links.update(link)
-
-        return links
-
-    def __extract(self, target, line):
+    def __extract(self, target, res):
 
         new_extract = set()
 
@@ -58,16 +46,19 @@ class Crawler(object):
             print("[!] Error: Wrong input")
             return new_extract
         
-        extract = self.regex[target].findall(line)
+        res = filter(None, res.split('\n'))
 
-        if not extract:
-            return new_extract
+        for line in res:
+            extract = self.regex[target].findall(line)
 
-        extract = extract[0]
-        for e in extract:
-            if not e:
+            if not extract:
                 continue
-            new_extract.add(e)
+
+            extract = extract[0]
+            for e in extract:
+                if not e:
+                    continue
+                new_extract.add(e)
             
         return new_extract
 
