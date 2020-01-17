@@ -1,16 +1,19 @@
-import urllib.parse as urlparse
-import urllib.parse as urllib
-
+import abc
 import re
 from .requester import Requester
 
-class SearchEengine(object):
+class BaseSearchEngine(metaclass = abc.ABCMeta):
 
-    def __init__(self, callback):
-        self.filters = dict.fromkeys(["site", "nosearch"])
-        self.callback = callback
-        self.requester = Requester()
+    def __init__(self, filter_func):
+        self.question = ""
+        self.filter_func = filter_func
         self.page_no = 0
+
+        self.init_filters()
+        self.requester = Requester()
+
+    def init_filters(self):
+        self.filters = dict.fromkeys(["site", "nosearch"])
 
     def is_filter_valid(self, new_filter):
 
@@ -26,29 +29,26 @@ class SearchEengine(object):
             return None
 
         if self.filters == new_filter:
-            self.change_query = False
             return None
 
-        self.filters = dict.fromkeys(["site", "nosearch"])
-
+        self.init_filters()
+        
         for key in new_filter:
             self.filters[key] = new_filter[key]
             self.change_query = True
 
-    # def add_filters(self, new_filter):
+    def set_question(self, new_question):
+        
+        if not new_question:
+            return None
 
-    #     if not is_filter_valid(new_filter):
-    #         return None
+        if self.question == new_question:
+            return None
 
-    #     if self.filters == new_filter:
-    #         self.change_query = False
-    #         return None
+        self.question = new_question
+        self.change_query = True
 
-    #     for key in new_filter:
-    #         self.filters[key] = new_filter[key]
-    #         self.change_query = True
-
-    # override    
+    @abc.abstractmethod 
     def check_response_endpage(self, res):
         pass
 
@@ -59,18 +59,26 @@ class SearchEengine(object):
         return True
 
     def generate_query(self): 
-        query = ""
+        
+        query = []
+
+        if self.question:
+            query.append(self.question)
 
         for key in self.filters:
             if isinstance(self.filters[key], list):
                 if not self.filters[key]:
                     continue
                 filter_str = (" " + self.filter_forms[key]).join(self.filters[key])
-                query += self.filter_forms[key] + filter_str + " "
+                query.append(self.filter_forms[key] + filter_str)
             
             elif isinstance(self.filters[key], str):
-                query += self.filter_forms[key] + self.filters[key] + " "
-                     
+                if not self.filters[key]:
+                    continue
+                query.append(self.filter_forms[key] + self.filters[key])
+        
+        query = ' '.join(query)
+ 
         return self.base_url.format(query=query, page_no=self.page_no)
 
     def search(self, query):
@@ -112,23 +120,23 @@ class SearchEengine(object):
                 print("[*] Info: No more page")
                 break
 
-            next_page = self.callback(res)
+            next_page = self.filter_func(res)
             
         print("[*] Info: Search All END")
 
-    # override
+    @abc.abstractmethod
     def update_page_no(self):
         pass
 
 
-class Google(SearchEengine):
+class Google(BaseSearchEngine):
     
-    def __init__(self, callback):
+    def __init__(self, filter_func):
         
         self.engine_name = "Google"
         self.base_url = "https://www.google.com/search?q={query}&btnG=Search&hl=en-US&gbv=1&start={page_no}&filter=0"
         self.filter_forms = {"site":"site:", "nosearch":"-"}
-        super().__init__(callback)
+        super().__init__(filter_func)
 
     def check_response_endpage(self, res):
         if 'did not match any documents.' in res.text:
@@ -147,13 +155,13 @@ class Google(SearchEengine):
         self.page_no += 10
 
 
-class Bing(SearchEengine):
+class Bing(BaseSearchEngine):
 
-    def __init__(self, callback):
+    def __init__(self, filter_func):
         self.engine_name = "Bing"
         self.base_url = 'https://www.bing.com/search?q={query}&go=Submit&first={page_no}'
         self.filter_forms = {"site":"domain:", "nosearch":"-"}
-        super().__init__(callback)
+        super().__init__(filter_func)
 
         self.endpage_regx = re.compile('<a class="sb_pagS sb_pagS_bp b_widePag sb_bp">(.*?)</a>')
 
@@ -173,7 +181,7 @@ class Bing(SearchEengine):
         self.page_no += 10
 
 
-class Yahoo(SearchEengine):
+class Yahoo(BaseSearchEngine):
 
     def __init__(self, callback):
         self.engine_name = "Yahoo"
