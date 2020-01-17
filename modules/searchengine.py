@@ -132,7 +132,8 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
             print("[!] Error:", self.engine_name, "Search fail")
             return None
         
-        if not check_response_endpage(res):
+
+        if not self.check_response_endpage(res):
             return None
 
         next_page = self.extract_info_callback(res)
