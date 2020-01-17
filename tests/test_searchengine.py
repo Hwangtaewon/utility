@@ -76,8 +76,9 @@ import unittest
 
 class GoogleTest(unittest.TestCase):
 
-    def callback(self):
-        return "test"
+    def callback(self, res):
+        print(res.text)
+        return None
 
     def test_generate_query(self):
 
@@ -92,7 +93,8 @@ class GoogleTest(unittest.TestCase):
 
         for test in testcase:
             google.set_all_filters(test[0])
-            self.assertEqual(google.generate_query(), test[1])
+            google.search_all()
+            # self.assertEqual(google.generate_query(), test[1])
 
 if __name__ == '__main__':
     sys.path.insert(0, '../')

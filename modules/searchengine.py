@@ -1,12 +1,13 @@
 import abc
 import re
 from .requester import Requester
+from .crawler import Crawler
 
 class BaseSearchEngine(metaclass = abc.ABCMeta):
 
-    def __init__(self, filter_func):
+    def __init__(self, extract_info_callback):
         self.question = ""
-        self.filter_func = filter_func
+        self.extract_info_callback = extract_info_callback
         self.page_no = 0
 
         self.init_filters()
@@ -19,8 +20,12 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
 
         if set(new_filter.keys()) - set(self.filters.keys()):
             print("[!] Error: Wrong filter key " + str(set(new_filter.keys()) - set(self.filters.keys())))
-            raise ValueError("Wrong filter key")
-        
+            return False
+        return True
+
+    def is_filter_set(self):
+        if self.filters == dict.fromkeys(["site", "nosearch"]):
+            return False
         return True
 
     def set_all_filters(self, new_filter):
@@ -60,6 +65,17 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
 
     def generate_query(self): 
         
+        if not self.question and not self.is_filter_set():
+            print("[!] You must set question or filter.")
+            return None
+
+        # If you add filters or change question, reset page_no and make new query
+        if self.change_query:
+            self.page_no = 0
+            self.change_query = False
+        else:
+            self.update_page_no()
+
         query = []
 
         if self.question:
@@ -81,8 +97,13 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
  
         return self.base_url.format(query=query, page_no=self.page_no)
 
-    def search(self, query):
+    def search(self):
         
+        query = self.generate_query()
+
+        if not query:
+            return None
+
         try:
             res = self.requester.request_with_no_handling(query)
             return res
@@ -93,50 +114,42 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
 
     # get all search results
     def search_all(self):
+        query = self.generate_query()
 
-        next_page = True
-        self.page_no = 0
-
-        while next_page :
-            
-            # If you add filters, then make new query and reset page_no
-            if self.change_query :
-                self.page_no = 0
-                self.change_query = False
-            else:
-                self.update_page_no()
-            
-            query = self.generate_query()
-            res = self.search(query)
-
-            if not res:
-                break
-
-            if not self.check_response_errors(res):
-                print("[!] Error:", self.engine_name, "Search fail")
-                break
-            
-            if not self.check_response_endpage(res):
-                print("[*] Info: No more page")
-                break
-
-            next_page = self.filter_func(res)
-            
-        print("[*] Info: Search All END")
+        crawler = Crawler()
+        crawler.crawl_with_errinfo(query, self.crawler_callback)
 
     @abc.abstractmethod
     def update_page_no(self):
         pass
 
+    def crawler_callback(self, url, res, e):
+        
+        if not res:
+            return None
+    
+        if not self.check_response_errors(res):
+            print("[!] Error:", self.engine_name, "Search fail")
+            return None
+
+        next_page = self.extract_info_callback(res)
+        if not next_page:
+            return None
+
+        query = self.generate_query()
+        if not query:
+            return None
+
+        return query
 
 class Google(BaseSearchEngine):
     
-    def __init__(self, filter_func):
+    def __init__(self, extract_info_callback):
         
         self.engine_name = "Google"
         self.base_url = "https://www.google.com/search?q={query}&btnG=Search&hl=en-US&gbv=1&start={page_no}&filter=0"
         self.filter_forms = {"site":"site:", "nosearch":"-"}
-        super().__init__(filter_func)
+        super().__init__(extract_info_callback)
 
     def check_response_endpage(self, res):
         if 'did not match any documents.' in res.text:
@@ -157,11 +170,11 @@ class Google(BaseSearchEngine):
 
 class Bing(BaseSearchEngine):
 
-    def __init__(self, filter_func):
+    def __init__(self, extract_info_callback):
         self.engine_name = "Bing"
         self.base_url = 'https://www.bing.com/search?q={query}&go=Submit&first={page_no}'
         self.filter_forms = {"site":"domain:", "nosearch":"-"}
-        super().__init__(filter_func)
+        super().__init__(extract_info_callback)
 
         self.endpage_regx = re.compile('<a class="sb_pagS sb_pagS_bp b_widePag sb_bp">(.*?)</a>')
 
