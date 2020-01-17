@@ -9,12 +9,12 @@ class DomainParserTest(unittest.TestCase):
 
         test_case = {
             "https://www.naver.com":"com",
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"net"
-            # "https://logins.daum.net/accounts/signinform.do":"net",
-            # "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
-            # "https://www.istarbucks.co.kr/index.do":"co.kr",
-            # "https://www.naver.kr":"kr",
-            # "https://www.naver.co.kr":"co.kr",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"net",
+            "https://logins.daum.net/accounts/signinform.do":"net",
+            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
+            "https://www.istarbucks.co.kr/index.do":"co.kr",
+            "https://www.naver.kr":"kr",
+            "https://www.example.emergency.aero/":"emergency.aero"
             }
 
         domain_parser = DomainParser()
@@ -29,31 +29,31 @@ class DomainParserTest(unittest.TestCase):
         print("[*] test: get_core_keyword sucess case")
 
         test_case = {
-            "https://www.naver.com":["naver"],
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["daum"],
-            "https://logins.daum.net/accounts/signinform.do":["daum"],
-            "http://192.168.0.2/chatting/index.php":["192.168.0.2"],
-            "https://www.istarbucks.co.kr/index.do":["istarbucks"],
-            "https://logins.daum.net/accounts/signinform.do?url=https":["daum"]
+            "https://www.naver.com":"naver",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"daum",
+            "https://logins.daum.net/accounts/signinform.do":"daum",
+            "http://192.168.0.2/chatting/index.php":"192.168.0.2",
+            "https://www.istarbucks.co.kr/index.do":"istarbucks",
+            "https://logins.daum.net/accounts/signinform.do?url=https":"daum"
             }
 
         domain_parser = DomainParser()
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_core_keyword(url,suffix)
+            result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
 
 
         print("[*] test: get_core_keyword fail case")
         
         test_case = {
-            "http://localhost/chatting/index.php":[],
+            "http://localhost/chatting/index.php":None,
         }
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_core_keyword(url,suffix)
+            result = domain_parser.get_core_keyword(url, suffix)
             self.assertEqual(result, sucess_res)
 
     def test_get_current_path(self):
@@ -61,13 +61,13 @@ class DomainParserTest(unittest.TestCase):
         print("[*] test: get_current_path sucess case")
 
         test_case = {
-            "https://www.naver.com":["https://www.naver.com"],
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["https://logins.daum.net/accounts"],
-            "https://logins.daum.net/accounts/signinform.do":["https://logins.daum.net/accounts"],
-            "http://localhost/chatting/index.php":["http://localhost/chatting"],
-            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2/chatting"],
-            "https://www.istarbucks.co.kr/index.do":["https://www.istarbucks.co.kr"],
-            "https://logins.daum.net/accounts/test/signinform.do?url=https":["https://logins.daum.net/accounts/test"]
+            "https://www.naver.com":"https://www.naver.com",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"https://logins.daum.net/accounts",
+            "https://logins.daum.net/accounts/signinform.do":"https://logins.daum.net/accounts",
+            "http://localhost/chatting/index.php":"http://localhost/chatting",
+            "http://192.168.0.2/chatting/index.php":"http://192.168.0.2/chatting",
+            "https://www.istarbucks.co.kr/index.do":"https://www.istarbucks.co.kr",
+            "https://logins.daum.net/accounts/test/signinform.do?url=https":"https://logins.daum.net/accounts/test"
             }
          
         domain_parser = DomainParser()
@@ -82,13 +82,13 @@ class DomainParserTest(unittest.TestCase):
         print("[*] test: get_domain_name sucess case")
 
         test_case = {
-            "https://www.naver.com":["www.naver.com"],
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["logins.daum.net"],
-            "https://logins.daum.net/accounts/signinform.do":["logins.daum.net"],
-            "http://localhost/chatting/index.php":["localhost"],
-            "http://192.168.0.2/chatting/index.php":["192.168.0.2"],
-            "https://www.istarbucks.co.kr/index.do":["www.istarbucks.co.kr"],
-            "https://logins.daum.net/accounts/test/signinform.do?url=https":["logins.daum.net"]
+            "https://www.naver.com":"www.naver.com",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"logins.daum.net",
+            "https://logins.daum.net/accounts/signinform.do":"logins.daum.net",
+            "http://localhost/chatting/index.php":"localhost",
+            "http://192.168.0.2/chatting/index.php":"192.168.0.2",
+            "https://www.istarbucks.co.kr/index.do":"www.istarbucks.co.kr",
+            "https://logins.daum.net/accounts/test/signinform.do?url=https":"logins.daum.net"
             }
 
         domain_parser = DomainParser()
@@ -98,59 +98,70 @@ class DomainParserTest(unittest.TestCase):
             result = domain_parser.get_domain_name(url, suffix)
             self.assertEqual(result, sucess_res)
 
+    def test_get_pathless_url(self):
 
-    def test_get_fileless_url(self):
-
-        print("[*] test: get_fileless_url sucess case")
+        print("[*] test: pathless_url sucess case")
 
         test_case = {
-            "https://www.naver.com":["https://www.naver.com"],
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["https://logins.daum.net"],
-            "https://logins.daum.net/accounts/signinform.do":["https://logins.daum.net"],
-            "http://localhost/chatting/index.php":[],
-            "http://192.168.0.2/chatting/index.php":["http://192.168.0.2"],
-            "https://www.istarbucks.co.kr/index.do":["https://www.istarbucks.co.kr"],
-            "https://logins.daum.net/accounts/test/signinform.do?url=https":["https://logins.daum.net"]
+            "https://www.naver.com":"https://www.naver.com",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"https://logins.daum.net",
+            "https://logins.daum.net/accounts/signinform.do":"https://logins.daum.net",
+            "http://localhost/chatting/index.php":None,
+            "http://192.168.0.2/chatting/index.php":"http://192.168.0.2",
+            "https://www.istarbucks.co.kr/index.do":"https://www.istarbucks.co.kr",
+            "https://logins.daum.net/accounts/test/signinform.do?url=https":"https://logins.daum.net"
             }
-         
+
         domain_parser = DomainParser()
 
         for url, sucess_res in test_case.items():
-            suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_fileless_url(url, suffix)
+            result = domain_parser.get_pathless_url(url)
             self.assertEqual(result, sucess_res)
-
-
 
     def test_get_root_domain(self):
 
         print("[*] test: get_root_domain sucess case")
 
         test_case = {
-            "https://www.naver.com":["naver.com"],
-            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":["daum.net"],
-            "https://logins.daum.net/accounts/signinform.do":["daum.net"],
-            "http://192.168.0.2/chatting/index.php":["192.168.0.2"],
-            "https://www.istarbucks.co.kr/index.do":["istarbucks.co.kr"],
-            "https://logins.daum.net/accounts/signinform.do?url=https":["daum.net"]
+            "https://www.naver.com":"naver.com",
+            "https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net%2F":"daum.net",
+            "https://logins.daum.net/accounts/signinform.do":"daum.net",
+            "http://192.168.0.2/chatting/index.php":"192.168.0.2",
+            "https://www.istarbucks.co.kr/index.do":"istarbucks.co.kr",
+            "https://logins.daum.net/accounts/signinform.do?url=https":"daum.net"
             }
 
         domain_parser = DomainParser()
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_root_domain(url,suffix)
+            result = domain_parser.get_root_domain(url, suffix)
             self.assertEqual(result, sucess_res)
 
-        print("[*] test: get_core_keyword fail case")
+        print("[*] test: get_root_domain fail case")
         
         test_case = {
-            "http://localhost/chatting/index.php":[],
+            "http://localhost/chatting/index.php":None,
         }
 
         for url, sucess_res in test_case.items():
             suffix = domain_parser.find_longest_suffix(url)
-            result = domain_parser.get_core_keyword(url,suffix)
+            result = domain_parser.get_core_keyword(url, suffix)
+            self.assertEqual(result, sucess_res)
+
+    def test_merge_dir_ascending(self):
+
+        print("[*] test: merge_dir_ascending sucess case")
+        
+        test_case = {
+            "http://www.namyangjuds.co.kr/dsnam/2013_sub6/info/../ours/../info/../ours/../info/../../2013_img/common/sub_tel.gif":"http://www.namyangjuds.co.kr/dsnam/2013_img/common/sub_tel.gif"
+        }
+
+        domain_parser = DomainParser()
+        
+        for url, sucess_res in test_case.items():
+            result = domain_parser.merge_dir_ascending(url)
+            print(result)
             self.assertEqual(result, sucess_res)
 
 
