@@ -37,10 +37,10 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
             return None
 
         self.init_filters()
+        self.change_query = True
         
         for key in new_filter:
             self.filters[key] = new_filter[key]
-            self.change_query = True
 
     def set_question(self, new_question):
         
