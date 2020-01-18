@@ -124,10 +124,10 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
         pass
 
     def crawler_callback(self, url, res, e):
-        
-        if not res:
+
+        if res == None:
             return None
-    
+
         if not self.check_response_errors(res):
             print("[!] Error:", self.engine_name, "Search fail")
             return None
