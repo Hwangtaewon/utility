@@ -81,7 +81,11 @@ class DomainParser:
             
         result = re.findall("(?:https?://)?(.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
         if result:
-            return result[0][1]
+            if result[0][1] == suffix:
+                result = result[0][0] + "." + result[0][1]
+            else:
+                result = result[0][1]
+            return result
         return None
 
     def get_suffix_list(self):
