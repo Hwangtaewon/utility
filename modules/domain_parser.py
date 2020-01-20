@@ -23,7 +23,7 @@ class DomainParser:
             return re.findall("(https?://[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
 
         for suffix in self.suffix_list:
-            result = re.search("(https?://[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$", url)
+            result = re.search("((https?://)*?[a-zA-Z0-9-_\.]*?)\." + suffix + "(/.*)?$", url)
             if not result:
                 continue
 
@@ -77,11 +77,11 @@ class DomainParser:
         
         result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
         if result:
-            return result[0]
+            return result[0][1]
 
-        result = re.findall("https?://(?:.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
+        result = re.findall("(https?://)*?(?:.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
         if result:
-            return result[0]
+            return result[0][1]
         return None
 
     def get_suffix_list(self):
