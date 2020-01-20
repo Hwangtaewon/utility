@@ -1,5 +1,6 @@
 from .requester import Requester
 import json
+import base64
 
 class DB(object):
 
@@ -8,21 +9,6 @@ class DB(object):
         self.dbdomain = dbdomain
         self.requester = Requester()
 
-    def get_subdomains_of_domain(self, domain):
-
-        # parameter error handling
-        if not isinstance(domain, str):
-            print("[!] Error: parameter type error - domain type is str")
-            return None
-
-        res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain)
-
-        if not res:
-            print("[!] Get subdomains of domain fail")
-            return None
-
-        return json.loads(res.text)
-        
     def get_subdomains_of_company(self, company):
 
         # parameter error handling
@@ -37,25 +23,6 @@ class DB(object):
             return None
 
         return json.loads(res.text)
-
-    def save_subdomains_of_domain(self, domain, subdomains):
-
-        # parameter error handling
-        if not isinstance(domain, str):
-            print("[!] Error: parameter type error - domain type is str")
-            return None
-        if not isinstance(subdomains, list):
-            print("[!] Error: parameter type error - owner's subdomains type is list")
-            return None
-
-        data = json.dumps(subdomains)
-        res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain, method="POST", data=data)
-
-        if not res:
-            print("[!] Save subdomains of domain fail")
-            return None
-
-        return res
 
     def save_subdomains_of_company(self, company, subdomains, source):
 
@@ -72,11 +39,47 @@ class DB(object):
 
         data = {sub:{"source":[source]} for sub in subdomains}
         data = json.dumps(data)
-        
+
         res = self.requester.requests(self.dbdomain + "/subdomains/company/" + company, method="POST", data=data)
 
         if not res:
             print("[!] Save subdomains of owner fail")
+            return None
+
+        return res
+
+    def get_subdomains_of_domain(self, domain):
+
+        # parameter error handling
+        if not isinstance(domain, str):
+            print("[!] Error: parameter type error - domain type is str")
+            return None
+
+        domain = str(base64.b64encode(domain.encode("utf-8")), "utf-8")
+        res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain)
+
+        if not res:
+            print("[!] Get subdomains of domain fail")
+            return None
+
+        return json.loads(res.text)
+        
+
+    def save_subdomains_of_domain(self, domain, subdomains):
+
+        # parameter error handling
+        if not isinstance(domain, str):
+            print("[!] Error: parameter type error - domain type is str")
+            return None
+        if not isinstance(subdomains, list):
+            print("[!] Error: parameter type error - owner's subdomains type is list")
+            return None
+
+        data = json.dumps(subdomains)
+        res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain, method="POST", data=data)
+
+        if not res:
+            print("[!] Save subdomains of domain fail")
             return None
 
         return res
