@@ -39,9 +39,9 @@ class DomainParser:
         if result:
             return result[0]
 
-        result = re.findall("https?://(?:.*?\.)?([a-zA-Z0-9-_\.]*?)\." + suffix + "(?:/.*)?$", url)
+        result = re.findall("(https?://)*?(?:.*?\.)?([a-zA-Z0-9-_\.]*?)\." + suffix + "(?:/.*)?$", url)
         if result:
-            return result[0]
+            return result[0][1]
         
         return None
 
