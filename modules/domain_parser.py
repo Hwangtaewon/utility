@@ -75,11 +75,11 @@ class DomainParser:
 
     def get_root_domain(self, url, suffix):
         
-        result = re.findall("https?://([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
+        result = re.findall("(?:https?://)?([12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d\.[12]?\d?\d)", url)
         if result:
-            return result[0][1]
-
-        result = re.findall("(https?://)*?(?:.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
+            return result[0]
+            
+        result = re.findall("(?:https?://)?(.*?)\.(.*?" + suffix + ")(?:/.*)?$", url)
         if result:
             return result[0][1]
         return None

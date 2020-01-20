@@ -110,6 +110,7 @@ class DomainParserTest(unittest.TestCase):
             "http://192.168.0.2/chatting/index.php":"http://192.168.0.2",
             "https://www.istarbucks.co.kr/index.do":"https://www.istarbucks.co.kr",
             "https://logins.daum.net/accounts/test/signinform.do?url=https":"https://logins.daum.net"
+
             }
 
         domain_parser = DomainParser()
@@ -128,7 +129,11 @@ class DomainParserTest(unittest.TestCase):
             "https://logins.daum.net/accounts/signinform.do":"daum.net",
             "http://192.168.0.2/chatting/index.php":"192.168.0.2",
             "https://www.istarbucks.co.kr/index.do":"istarbucks.co.kr",
-            "https://logins.daum.net/accounts/signinform.do?url=https":"daum.net"
+            "https://logins.daum.net/accounts/signinform.do?url=https":"daum.net",
+            "www.naver.com":"naver.com",
+            "192.168.0.2/chatting/index.php":"192.168.0.2",
+            "www.istarbucks.co.kr/index.do":"istarbucks.co.kr",
+            "logins.daum.net/accounts/signinform.do?url=https":"daum.net"
             }
 
         domain_parser = DomainParser()
