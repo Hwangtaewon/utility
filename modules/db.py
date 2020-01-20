@@ -1,5 +1,6 @@
 from .requester import Requester
 import json
+import base64
 
 class DB(object):
 
@@ -54,6 +55,7 @@ class DB(object):
             print("[!] Error: parameter type error - domain type is str")
             return None
 
+        domain = str(base64.b64encode(domain.encode("utf-8")), "utf-8")
         res = self.requester.requests(self.dbdomain + "/subdomains/domain/" + domain)
 
         if not res:
