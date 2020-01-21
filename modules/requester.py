@@ -114,4 +114,6 @@ class Requester(object):
             response = requests.get(url, params=data, headers=self.headers, verify=False)
         elif method == "POST":
             response = requests.post(url, data=data, headers=self.headers, verify=False)
+        elif method == "DELETE":
+            response = requests.delete(url, data=data, headers=self.headers, verify=False)
         return response
