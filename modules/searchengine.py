@@ -1,18 +1,17 @@
-import abc
 import re
 from .requester import Requester
 from .crawler import Crawler
+import urllib.parse as urlparse
 
-class BaseSearchEngine(metaclass = abc.ABCMeta):
+class BaseSearchEngine(object):
 
-    def __init__(self, extract_info_callback):
+    def __init__(self):
         self.question = ""
-        self.extract_info_callback = extract_info_callback
         self.page_no = 0
-
         self.init_filters()
         self.requester = Requester()
 
+    ## set filter/questions and generate query
     def init_filters(self):
         self.filters = dict.fromkeys(["site", "nosearch"])
 
@@ -53,16 +52,6 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
         self.question = new_question
         self.change_query = True
 
-    @abc.abstractmethod 
-    def check_response_endpage(self, res):
-        pass
-
-    # override
-    def check_response_errors(self, res):
-        if (res.status_code >= 400):
-            return False
-        return True
-
     def generate_query(self): 
         
         if not self.question and not self.is_filter_set():
@@ -96,7 +85,23 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
         query = ' '.join(query)
  
         return self.base_url.format(query=query, page_no=self.page_no)
+    
+    ########################
 
+    ## check Error/endpage of search engine
+    # override
+    def check_response_endpage(self, res):
+        pass
+
+    # override
+    def check_response_errors(self, res):
+        if (res.status_code >= 400):
+            return False
+        return True
+
+    ########################
+
+    ## search once
     def search(self):
         
         query = self.generate_query()
@@ -112,18 +117,69 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
             print("[!] Error: Requests fail")
             return None
 
-    # get all search results
-    def search_all(self):
+    ########################
+
+    ## search all
+    #### generic search
+    #### You have to set callback to extract infos from response
+    def search_all(self, callback_extract_info):
+        
+        if callback_extract_info == None:
+            print("[!] Error: You need to set function at callback_extract_info parameter")
+            return None
+
+        self.callback_extract_info = callback_extract_info
+
         query = self.generate_query()
+        
 
         crawler = Crawler()
+        
         crawler.crawl_with_errinfo(query, self.crawler_callback)
 
-    @abc.abstractmethod
     def update_page_no(self):
         pass
 
     def crawler_callback(self, url, res, e):
+        print(url)
+        if res == None:
+            return None
+
+        if not self.check_response_errors(res):
+            print("[!] Error:", self.engine_name, "Search fail")
+            return None
+        
+        if not self.check_response_endpage(res):
+            print("[*] Info: Search End page")
+            return None
+
+        next_page = self.callback_extract_info(res)
+        if not next_page:
+            return None
+
+        query = self.generate_query()
+        if not query:
+            return None
+
+        return query
+
+    ########################
+
+    ## search links (precisely domain)
+    #### extract urls from response
+    def search_all_links(self, callback_pass_data):
+
+        if callback_pass_data == None:
+            print("[!] Error: You need to set function at callback_pass_data parameter")
+            return None
+
+        self.callback_pass_data = callback_pass_data
+        query = self.generate_query()
+
+        crawler = Crawler()
+        crawler.crawl_with_errinfo(query, self.crawler_callback_links)   
+
+    def crawler_callback_links(self, url, res, e):
 
         if res == None:
             return None
@@ -136,7 +192,11 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
             print("[*] Info: Search End page")
             return None
 
-        next_page = self.extract_info_callback(res)
+        links = self.extract_links(res.text)
+        if not links:
+            return None
+
+        next_page = self.pass_data(links)
         if not next_page:
             return None
 
@@ -146,14 +206,39 @@ class BaseSearchEngine(metaclass = abc.ABCMeta):
 
         return query
 
+    def extract_links(self, res):
+
+        links_list = []
+
+        for regx in self.link_regx:
+            link = regx.findall(res)
+            links_list += link
+
+        links_list = self.trim_links(links_list)
+        return links_list
+
+    # override
+    def trim_links(self, links_list):
+        pass
+
+    ########################
+
+    ## pass extracted data
+    #### If you use thread(or multiprocess) and share memory, you don't need to use callback. You can use share memory
+    def pass_data(self, data):
+        next_page = self.callback_pass_data(data)
+        return next_page
+
+    ########################
 class Google(BaseSearchEngine):
     
-    def __init__(self, extract_info_callback):
+    def __init__(self):
         
         self.engine_name = "Google"
         self.base_url = "https://www.google.com/search?q={query}&btnG=Search&hl=en-US&gbv=1&start={page_no}&filter=0"
         self.filter_forms = {"site":"site:", "nosearch":"-"}
-        super().__init__(extract_info_callback)
+        super().__init__()
+        self.link_regx = [re.compile('<div class="BNeawe UPmit AP7Wnd">(.*?)<\/div>')]
 
     def check_response_endpage(self, res):
         if 'did not match any documents.' in res.text:
@@ -171,14 +256,33 @@ class Google(BaseSearchEngine):
     def update_page_no(self):
         self.page_no += 10
 
+    ## To search links
+    def trim_links(self, links_list):
+
+        subdomains = []
+
+        for link in links_list:
+            link = re.sub('<span.*?>', '', link)
+            link = link.split(" ")[0]
+
+            if not link.startswith('http'):
+                link = "http://" + link
+
+            subdomains.append(urlparse.urlparse(link).netloc)
+        
+        return subdomains
+
 
 class Bing(BaseSearchEngine):
 
-    def __init__(self, extract_info_callback):
+    def __init__(self):
         self.engine_name = "Bing"
         self.base_url = 'https://www.bing.com/search?q={query}&go=Submit&first={page_no}'
         self.filter_forms = {"site":"domain:", "nosearch":"-"}
-        super().__init__(extract_info_callback)
+        super().__init__()
+        self.link_regx = [
+            re.compile('<li class="b_algo"><h2><a target="_blank" href="(.*?)"'), 
+            re.compile('<div class="b_title"><h2><a target="_blank" href="(.*?)"')]
 
         self.endpage_regx = re.compile('<a class="sb_pagS sb_pagS_bp b_widePag sb_bp">(.*?)</a>')
 
@@ -197,6 +301,19 @@ class Bing(BaseSearchEngine):
     def update_page_no(self):
         self.page_no += 10
 
+    def trim_links(self, links_list):
+
+        subdomains = []
+
+        for link in links_list:
+            link = re.sub('<(\/)?strong>|<span.*?>|<|>', '', link)
+
+            if not link.startswith('http'):
+                link = "http://" + link
+
+            subdomains.append(urlparse.urlparse(link).netloc)
+        
+        return subdomains
 
 class Yahoo(BaseSearchEngine):
 
