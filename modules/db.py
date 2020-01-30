@@ -112,3 +112,13 @@ class DB(object):
 
         return res
 
+    def get_next_target(self):
+
+        res = self.requester.requests(self.dbdomain + "/targets", method="GET")
+        
+        if not res:
+            print("[!] Get next target fail")
+            return None
+
+        return json.loads(res.text)
+
